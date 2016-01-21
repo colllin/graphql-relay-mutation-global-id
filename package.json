@@ -1,0 +1,76 @@
+{
+  "name": "graphql-relay-mutation-global-id",
+  "version": "0.1.0",
+  "description": "Type-checked global IDs for your GraphQL Relay mutation's `inputFields`.",
+  "license": "MIT",
+  "homepage": "https://github.com/colllin/graphql-relay-mutation-global-id#readme",
+  "bugs": {
+    "url": "https://github.com/colllin/graphql-relay-mutation-global-id/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/colllin/graphql-relay-mutation-global-id.git"
+  },
+  "main": "index.js",
+  "directories": {
+    "lib": "./lib"
+  },
+  "files": [
+    "lib",
+    "README.md",
+    "LICENSE",
+    "PATENTS"
+  ],
+  "options": {
+    "mocha": "--require scripts/mocha-bootload src/**/__tests__/**/*.js"
+  },
+  "keywords": [
+    "graphql",
+    "relay",
+    "mutation",
+    "inputFields",
+    "type",
+    "globalIdField",
+    "fromGlobalId",
+    "Global ID"
+  ],
+  "babel": {
+    "optional": [
+      "runtime",
+      "es7.asyncFunctions",
+      "es7.objectRestSpread"
+    ]
+  },
+  "scripts": {
+    "prepublish": "npm test && npm run build",
+    "test": "npm run lint && npm run check && mocha $npm_package_options_mocha",
+    "testonly": "mocha $npm_package_options_mocha",
+    "lint": "eslint src",
+    "check": "flow check",
+    "build": "rm -rf lib/* && babel src --ignore __tests__ --optional runtime --out-dir lib",
+    "watch": "babel --optional runtime scripts/watch.js | node",
+    "cover": "babel-node node_modules/.bin/isparta cover --root src --report html node_modules/.bin/_mocha -- $npm_package_options_mocha",
+    "cover:lcov": "babel-node node_modules/.bin/isparta cover --root src --report lcovonly node_modules/.bin/_mocha -- $npm_package_options_mocha"
+  },
+  "dependencies": {
+    "babel-runtime": "~5.8.3"
+  },
+  "peerDependencies": {
+    "graphql": "~0.4.2",
+    "graphql-relay": "~0.3.6"
+  },
+  "devDependencies": {
+    "babel": "5.8.3",
+    "babel-core": "5.8.3",
+    "babel-eslint": "4.0.5",
+    "chai": "3.0.0",
+    "chai-as-promised": "5.1.0",
+    "coveralls": "2.11.3",
+    "eslint": "0.24.0",
+    "flow-bin": "0.13.1",
+    "graphql": "0.4.2",
+    "isparta": "3.0.3",
+    "mocha": "2.2.5",
+    "sane": "1.1.3"
+  }
+}
