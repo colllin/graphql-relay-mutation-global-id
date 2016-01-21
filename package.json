@@ -11,7 +11,7 @@
     "type": "git",
     "url": "git+https://github.com/colllin/graphql-relay-mutation-global-id.git"
   },
-  "main": "index.js",
+  "main": "src/index.js",
   "directories": {
     "lib": "./lib"
   },
