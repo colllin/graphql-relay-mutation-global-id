@@ -35,19 +35,26 @@ function globalIdHasExactType(
  * The ResolvedGlobalID is passed into the mutateAndGetPayload function.
  */
 export function globalIdForType(type: GraphQLNamedType): GraphQLScalarType {
+  let globalIdTypeName = `${type.name}GlobalID`;
+  let typeIsInterface = type instanceof GraphQLInterfaceType;
+  let typeIsUnion = type instanceof GraphQLUnionType;
+  let possibleTypes = typeIsInterface || typeIsUnion ? type.getPossibleTypes() : [type];
+  let possibleTypeNames = possibleTypes.map((possibleType) => possibleType.name);
   return new GraphQLNonNull(new GraphQLScalarType({
-    name: `${type.name}GlobalID`,
+    name: globalIdTypeName,
     description:
-      `The \`${type.name}GlobalID\` scalar type represents a globally unique
+      `The \`${globalIdTypeName}\` scalar type represents a globally unique
       identifier, often used to refetch an object or as key for a cache. The
-      Global ${type.name} ID type appears in a JSON response as a String;
+      \`${globalIdTypeName}\` type appears in a JSON response as a String;
       however, it is not intended to be human-readable. When expected as an
-      input type, the incoming string will be accepted as a ${type.name}GlobalID
-      if it can be interpreted using Relay\'s \`fromGlobalId\` function, and
-      the resolved global ID type is ${type.name}. If ${type.name} is a
-      GraphQLInterfaceType or GraphQLUnionType, the incoming string will be
-      accepted if its resolved global ID type implements or is a member of
-      ${type.name}.`,
+      input type, the incoming string will be accepted as a
+      \`${globalIdTypeName}\` if it can be interpreted using Relay\'s
+      \`fromGlobalId\` function, and the resolved global ID's \`type\`` +
+      typeIsInterface || typeIsUnion ?
+        `${typeIsInterface ? 'implements' : 'is a member of'} \`${type.name}\`.
+        The possible types include \`${possibleTypeNames.join('`, `')}\`.`
+      :
+        `is \`${type.name}\`.`,
     serialize: String,
     parseValue: String,
     parseLiteral(ast) {
@@ -57,27 +64,10 @@ export function globalIdForType(type: GraphQLNamedType): GraphQLScalarType {
       }
 
       var resolvedGlobalId = fromGlobalId(ast.value);
-
-      if (globalIdHasExactType(resolvedGlobalId, type)) {
-        return resolvedGlobalId;
-      }
-
-      if (type instanceof GraphQLInterfaceType) {
-        throw new GraphQLError(`Query error: globalIdForType() does not yet
-          support GraphQLInterfaceType.`);
-      }
-
-      if (
-        type instanceof GraphQLUnionType ||
-        type instanceof GraphQLInterfaceType
-      ) {
-        var isAnyPossibleType = type.getPossibleTypes().some(
-          (possibleType) => globalIdHasExactType(resolvedGlobalId, possibleType)
-        );
-        if (isAnyPossibleType) {
-          return resolvedGlobalId;
-        }
-      }
+      var isAnyPossibleType = possibleTypes.some(
+        (possibleType) => globalIdHasExactType(resolvedGlobalId, possibleType)
+      );
+      if (isAnyPossibleType) return resolvedGlobalId;
 
       return null;
     },
