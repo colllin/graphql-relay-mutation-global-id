@@ -40,6 +40,15 @@ export function globalIdForType(type: GraphQLNamedType): GraphQLScalarType {
   let typeIsUnion = type instanceof GraphQLUnionType;
   let possibleTypes = typeIsInterface || typeIsUnion ? type.getPossibleTypes() : [type];
   let possibleTypeNames = possibleTypes.map((possibleType) => possibleType.name);
+  let parseValue = (strValue) => {
+    let resolvedGlobalId = fromGlobalId(ast.value);
+    let isAnyPossibleType = possibleTypes.some(
+      (possibleType) => globalIdHasExactType(resolvedGlobalId, possibleType)
+    );
+    if (isAnyPossibleType) return resolvedGlobalId;
+
+    return null;
+  }
   return new GraphQLNonNull(new GraphQLScalarType({
     name: globalIdTypeName,
     description:
@@ -58,20 +67,14 @@ export function globalIdForType(type: GraphQLNamedType): GraphQLScalarType {
           `is \`'${type.name}'\`.`
       ),
     serialize: String,
-    parseValue: String,
+    parseValue: parseValue,
     parseLiteral(ast) {
       if (ast.kind !== Kind.STRING) {
         throw new GraphQLError(`Query error: Global ID must be a String,
           but received a ${ast.kind}.`, [ast]);
       }
 
-      var resolvedGlobalId = fromGlobalId(ast.value);
-      var isAnyPossibleType = possibleTypes.some(
-        (possibleType) => globalIdHasExactType(resolvedGlobalId, possibleType)
-      );
-      if (isAnyPossibleType) return resolvedGlobalId;
-
-      return null;
+      return parseValue(ast.value);
     },
     getPossibleTypes: function() {
       return type.getPossibleTypes ? type.getPossibleTypes() : type;
