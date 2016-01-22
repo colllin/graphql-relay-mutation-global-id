@@ -47,7 +47,7 @@ export function globalIdForType(type: GraphQLNamedType): GraphQLScalarType {
     );
     if (isAnyPossibleType) return resolvedGlobalId;
 
-    return null;
+    throw new GraphQLError(`Query error: Could not parse value ${strValue} as a Global ID of type \`${type.name}\`.`);
   }
   return new GraphQLNonNull(new GraphQLScalarType({
     name: globalIdTypeName,
