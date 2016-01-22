@@ -49,13 +49,13 @@ export function globalIdForType(type: GraphQLNamedType): GraphQLScalarType {
       however, it is not intended to be human-readable. When expected as an
       input type, the incoming string will be accepted as a
       \`${globalIdTypeName}\` if it can be interpreted using Relay\'s
-      \`fromGlobalId\` function, and the resolved global ID's \`type\`` +
+      \`fromGlobalId\` function, and the resolved global ID's \`type\` ` +
       (
         typeIsInterface || typeIsUnion ?
           `${typeIsInterface ? 'implements' : 'is a member of'} \`${type.name}\`.
           The possible types include \`${possibleTypeNames.join('`, `')}\`.`
         :
-          `is \`${type.name}\`.`
+          `is \`'${type.name}'\`.`
       ),
     serialize: String,
     parseValue: String,
