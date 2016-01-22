@@ -41,7 +41,7 @@ export function globalIdForType(type: GraphQLNamedType): GraphQLScalarType {
   let possibleTypes = typeIsInterface || typeIsUnion ? type.getPossibleTypes() : [type];
   let possibleTypeNames = possibleTypes.map((possibleType) => possibleType.name);
   let parseValue = (strValue) => {
-    let resolvedGlobalId = fromGlobalId(ast.value);
+    let resolvedGlobalId = fromGlobalId(strValue);
     let isAnyPossibleType = possibleTypes.some(
       (possibleType) => globalIdHasExactType(resolvedGlobalId, possibleType)
     );
