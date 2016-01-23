@@ -5,6 +5,7 @@ import {
   GraphQLUnionType,
   GraphQLNonNull,
   GraphQLScalarType,
+  GraphQLID,
 } from 'graphql';
 
 import type {
@@ -41,7 +42,7 @@ let cachedTypes = {};
  * String that came from the client query. A resolved global ID has structure
  * `{type: String, id: String}`.
  */
-export function globalIdType(type: GraphQLNamedType): GraphQLScalarType {
+export function globalIdType(type: GraphQLNamedType): GraphQLID {
   let globalIdTypeName = `GlobalID_${type.name}`;
   if (cachedTypes[globalIdTypeName]) return cachedTypes[globalIdTypeName];
 
@@ -103,5 +104,6 @@ export function globalIdType(type: GraphQLNamedType): GraphQLScalarType {
       return type.getPossibleTypes ? type.getPossibleTypes() : type;
     }
   });
+  cachedTypes[globalIdTypeName].prototype = GraphQLID;
   return cachedTypes[globalIdTypeName];
 }

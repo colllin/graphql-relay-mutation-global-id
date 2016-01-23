@@ -3,13 +3,13 @@
   "version": "0.1.0",
   "description": "Type-checked and introspective Relay global ID type for use as input or output types in your GraphQL schema.",
   "license": "MIT",
-  "homepage": "https://github.com/tomnod/relay-global-id-type#readme",
+  "homepage": "https://github.com/tomnod/graphql-relay-js-global-id-type#readme",
   "bugs": {
-    "url": "https://github.com/tomnod/relay-global-id-type/issues"
+    "url": "https://github.com/tomnod/graphql-relay-js-global-id-type/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tomnod/relay-global-id-type.git"
+    "url": "git+https://github.com/tomnod/graphql-relay-js-global-id-type.git"
   },
   "main": "lib/index.js",
   "directories": {
