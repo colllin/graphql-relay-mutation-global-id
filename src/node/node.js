@@ -30,12 +30,16 @@ function globalIdHasExactType(
 }
 
 /**
- * Creates the configuration for an id input field on a mutation, using
- * `fromGlobalId` to deconstruct the ID and validate for the provided typename.
- * The ResolvedGlobalID is passed into the mutateAndGetPayload function.
+ * Returns a type that can be declared on fields or args. It uses Relay's
+ * `toGlobalId` and `fromGlobalId` to serialize or parse the ID and validate
+ * that it is for correct `type`.
+ * When this type is used as a mutation arg, the resolved global ID is passed
+ * into the mutateAndGetPayload function, instead of the original global ID
+ * String that came from the client query. A resolved global ID has structure
+ * `{type: String, id: String}`.
  */
-export function globalIdForType(type: GraphQLNamedType): GraphQLScalarType {
-  let globalIdTypeName = `${type.name}GlobalID`;
+export function globalIdType(type: GraphQLNamedType): GraphQLScalarType {
+  let globalIdTypeName = `GlobalID<${type.name}>`;
   let typeIsInterface = type instanceof GraphQLInterfaceType;
   let typeIsUnion = type instanceof GraphQLUnionType;
   let possibleTypes = typeIsInterface || typeIsUnion ? type.getPossibleTypes() : [type];

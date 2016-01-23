@@ -1,4 +1,4 @@
 // Utilities for creating global IDs in systems that don't have them.
 export {
-  globalIdForType,
+  globalIdType,
 } from './node/node.js';
