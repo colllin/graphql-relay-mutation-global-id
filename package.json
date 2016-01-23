@@ -1,15 +1,15 @@
 {
-  "name": "graphql-relay-mutation-global-id",
+  "name": "relay-global-id-type",
   "version": "0.1.0",
-  "description": "Type-checked global IDs for your GraphQL Relay mutation's `inputFields`.",
+  "description": "Type-checked and introspective Relay global ID type for use as input or output types in your GraphQL schema.",
   "license": "MIT",
-  "homepage": "https://github.com/colllin/graphql-relay-mutation-global-id#readme",
+  "homepage": "https://github.com/tomnod/relay-global-id-type#readme",
   "bugs": {
-    "url": "https://github.com/colllin/graphql-relay-mutation-global-id/issues"
+    "url": "https://github.com/tomnod/relay-global-id-type/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/colllin/graphql-relay-mutation-global-id.git"
+    "url": "git+https://github.com/tomnod/relay-global-id-type.git"
   },
   "main": "lib/index.js",
   "directories": {
@@ -25,14 +25,19 @@
     "mocha": "--require scripts/mocha-bootload src/**/__tests__/**/*.js"
   },
   "keywords": [
-    "graphql",
-    "relay",
-    "mutation",
-    "inputFields",
-    "type",
+    "GraphQL",
+    "Relay",
+    "globalIdType",
+    "Global ID",
     "globalIdField",
     "fromGlobalId",
-    "Global ID"
+    "toGlobalId",
+    "type",
+    "query",
+    "mutation",
+    "args",
+    "fields",
+    "inputFields"
   ],
   "babel": {
     "optional": [
