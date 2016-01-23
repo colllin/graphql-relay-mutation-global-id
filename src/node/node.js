@@ -39,7 +39,7 @@ function globalIdHasExactType(
  * `{type: String, id: String}`.
  */
 export function globalIdType(type: GraphQLNamedType): GraphQLScalarType {
-  let globalIdTypeName = `GlobalID<${type.name}>`;
+  let globalIdTypeName = `GlobalID_${type.name}`;
   let typeIsInterface = type instanceof GraphQLInterfaceType;
   let typeIsUnion = type instanceof GraphQLUnionType;
   let possibleTypes = typeIsInterface || typeIsUnion ? type.getPossibleTypes() : [type];
