@@ -15,7 +15,8 @@ import { GraphQLError } from 'graphql/error';
 import { Kind } from 'graphql/language';
 
 import {
-  fromGlobalId
+  toGlobalId,
+  fromGlobalId,
 } from 'graphql-relay';
 
 type ResolvedGlobalId = {
@@ -48,14 +49,28 @@ export function globalIdType(type: GraphQLNamedType): GraphQLScalarType {
   let typeIsUnion = type instanceof GraphQLUnionType;
   let possibleTypes = typeIsInterface || typeIsUnion ? type.getPossibleTypes() : [type];
   let possibleTypeNames = possibleTypes.map((possibleType) => possibleType.name);
-  let parseValue = (strValue) => {
-    let resolvedGlobalId = fromGlobalId(strValue);
+
+  let serializeValue = (value) => {
+    if (typeIsUnion || typeIsInterface) throw new GraphQLError(
+      `Query error: Cannot generate a global ID of type ${type.name}.
+      ${type.name} is a
+      ${typeIsUnion ? 'GraphQLUnionType' : 'GraphQLInterfaceType'}, which is
+      not a resolvable / queryable type.`
+    )
+    return toGlobalId(type.name, String(value));
+  }
+  let parseValue = (serialized) => {
+    let resolvedGlobalId = fromGlobalId(serialized);
     let isAnyPossibleType = possibleTypes.some(
       (possibleType) => globalIdHasExactType(resolvedGlobalId, possibleType)
     );
     if (isAnyPossibleType) return resolvedGlobalId;
 
-    throw new GraphQLError(`Query error: Could not parse value ${strValue} as a Global ID of type \`${type.name}\`.`);
+    throw new GraphQLError(
+      `Query error: Expected Relay global ID of type \`${type.name}\`, but
+      received Relay global ID of type ${resolvedGlobalId.type}.`,
+      serialized
+    );
   }
   cachedTypes[globalIdTypeName] = new GraphQLScalarType({
     name: globalIdTypeName,
