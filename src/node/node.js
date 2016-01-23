@@ -29,6 +29,8 @@ function globalIdHasExactType(
   return resolvedGlobalId.type === type.name;
 }
 
+let cachedTypes = {};
+
 /**
  * Returns a type that can be declared on fields or args. It uses Relay's
  * `toGlobalId` and `fromGlobalId` to serialize or parse the ID and validate
@@ -40,6 +42,8 @@ function globalIdHasExactType(
  */
 export function globalIdType(type: GraphQLNamedType): GraphQLScalarType {
   let globalIdTypeName = `GlobalID_${type.name}`;
+  if (cachedTypes[globalIdTypeName]) return cachedTypes[globalIdTypeName];
+
   let typeIsInterface = type instanceof GraphQLInterfaceType;
   let typeIsUnion = type instanceof GraphQLUnionType;
   let possibleTypes = typeIsInterface || typeIsUnion ? type.getPossibleTypes() : [type];
@@ -53,7 +57,7 @@ export function globalIdType(type: GraphQLNamedType): GraphQLScalarType {
 
     throw new GraphQLError(`Query error: Could not parse value ${strValue} as a Global ID of type \`${type.name}\`.`);
   }
-  return new GraphQLScalarType({
+  cachedTypes[globalIdTypeName] = new GraphQLScalarType({
     name: globalIdTypeName,
     description:
       `The \`${globalIdTypeName}\` scalar type represents a globally unique
@@ -84,4 +88,5 @@ export function globalIdType(type: GraphQLNamedType): GraphQLScalarType {
       return type.getPossibleTypes ? type.getPossibleTypes() : type;
     }
   });
+  return cachedTypes[globalIdTypeName];
 }
